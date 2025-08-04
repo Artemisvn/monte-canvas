@@ -11,7 +11,8 @@ import {
   Zap,
   Target,
   BookOpen,
-  Bell
+  Bell,
+  Calculator
 } from 'lucide-react';
 
 import {
@@ -56,6 +57,12 @@ const mainItems = [
 ];
 
 const analyticsItems = [
+  { 
+    title: 'Options Trading', 
+    url: '/options', 
+    icon: Calculator,
+    description: 'Options pricing & Greeks'
+  },
   { 
     title: 'Portfolio Analysis', 
     url: '/portfolio', 

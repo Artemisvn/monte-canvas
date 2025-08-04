@@ -4,6 +4,7 @@ import { RiskDashboard } from '@/components/RiskDashboard';
 import { LiveMarketDashboard } from '@/components/LiveMarketDashboard';
 import { AlertSystem } from '@/components/AlertSystem';
 import { ResearchNotebook } from '@/components/ResearchNotebook';
+import { OptionsTrading } from '@/components/OptionsTrading';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { Badge } from '@/components/ui/badge';
@@ -99,6 +100,7 @@ const Index = () => {
               {/* Main Dashboard Content */}
               <div className="space-y-8">
                 <LiveMarketDashboard />
+                <OptionsTrading />
                 <BacktestingSimulator />
                 <MLModelSimulator />
                 <RiskDashboard />
