@@ -5,6 +5,7 @@ import { MLModelSimulator } from '@/components/MLModelSimulator';
 import { RiskDashboard } from '@/components/RiskDashboard';
 import { AlertSystem } from '@/components/AlertSystem';
 import { ResearchNotebook } from '@/components/ResearchNotebook';
+import { AdvancedChart } from '@/components/AdvancedChart';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Activity, Zap } from 'lucide-react';
 
@@ -61,6 +62,7 @@ const Index = () => {
       {/* Main Dashboard Content */}
       <div className="space-y-8">
         <LiveMarketDashboard />
+        <AdvancedChart />
         <OptionsTrading />
         <BacktestingSimulator />
         <MLModelSimulator />

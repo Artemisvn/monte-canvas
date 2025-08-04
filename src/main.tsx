@@ -15,6 +15,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import PerformancePage from "./pages/PerformancePage";
 import SignalsPage from "./pages/SignalsPage";
 import StrategyBuilderPage from "./pages/StrategyBuilderPage";
+import ChartsPage from "./pages/ChartsPage";
 import NotFound from "./pages/NotFound";
 import "./index.css";
 
@@ -25,6 +26,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />}>
           <Route index element={<Index />} />
           <Route path="market" element={<MarketPage />} />
+          <Route path="charts" element={<ChartsPage />} />
           <Route path="options" element={<OptionsPage />} />
           <Route path="backtest" element={<BacktestPage />} />
           <Route path="ml-models" element={<MLModelsPage />} />

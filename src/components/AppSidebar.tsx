@@ -58,6 +58,12 @@ const mainItems = [
 
 const analyticsItems = [
   { 
+    title: 'Advanced Charts', 
+    url: '/charts', 
+    icon: BarChart3,
+    description: 'Professional charting suite'
+  },
+  { 
     title: 'Options Trading', 
     url: '/options', 
     icon: Calculator,
