@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   BarChart3,
   Brain,
@@ -29,33 +29,28 @@ import {
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 
-interface SidebarProps {
-  activeSection: string;
-  onSectionChange: (section: string) => void;
-}
-
 const mainItems = [
   { 
     title: 'Live Market', 
-    id: 'market', 
+    url: '/market', 
     icon: Activity,
     description: 'Real-time data & news'
   },
   { 
     title: 'Backtesting Engine', 
-    id: 'backtest', 
+    url: '/backtest', 
     icon: BarChart3,
     description: 'Strategy testing & optimization'
   },
   { 
     title: 'ML Models', 
-    id: 'ml-models', 
+    url: '/ml-models', 
     icon: Brain,
     description: 'AI-powered predictions'
   },
   { 
     title: 'Risk Management', 
-    id: 'risk-management', 
+    url: '/risk-management', 
     icon: Shield,
     description: 'Portfolio risk analytics'
   },
@@ -64,25 +59,25 @@ const mainItems = [
 const analyticsItems = [
   { 
     title: 'Options Trading', 
-    id: 'options', 
+    url: '/options', 
     icon: Calculator,
     description: 'Options pricing & Greeks'
   },
   { 
     title: 'Portfolio Analysis', 
-    id: 'portfolio', 
+    url: '/portfolio', 
     icon: PieChart,
     description: 'Asset allocation & performance'
   },
   { 
     title: 'Signal Research', 
-    id: 'signals', 
+    url: '/signals', 
     icon: Zap,
     description: 'Alpha factor discovery'
   },
   { 
     title: 'Performance', 
-    id: 'performance', 
+    url: '/performance', 
     icon: TrendingUp,
     description: 'Returns & attribution'
   },
@@ -91,49 +86,53 @@ const analyticsItems = [
 const toolsItems = [
   { 
     title: 'Alerts & Notifications', 
-    id: 'alerts', 
+    url: '/alerts', 
     icon: Bell,
     description: 'Price & volume alerts'
   },
   { 
     title: 'Research Notebook', 
-    id: 'research', 
+    url: '/research', 
     icon: BookOpen,
     description: 'Ideas & documentation'
   },
   { 
     title: 'Monte Carlo', 
-    id: 'monte-carlo', 
+    url: '/monte-carlo', 
     icon: Activity,
     description: 'Simulation & stress testing'
   },
   { 
     title: 'Strategy Builder', 
-    id: 'strategy-builder', 
+    url: '/strategy-builder', 
     icon: Target,
     description: 'Custom algorithm design'
   },
 ];
 
-export function AppSidebar({ activeSection, onSectionChange }: SidebarProps) {
+export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
+  const currentPath = location.pathname;
 
-  const isActive = (sectionId: string) => activeSection === sectionId;
+  const isActive = (path: string) => {
+    if (path === '/market' && currentPath === '/') return true;
+    return currentPath === path;
+  };
 
-  const getNavCls = (sectionId: string) => {
-    const active = isActive(sectionId);
-    return `group transition-all duration-200 cursor-pointer ${
+  const getNavCls = (path: string) => {
+    const active = isActive(path);
+    return `group transition-all duration-200 ${
       active 
         ? 'bg-primary/10 text-primary font-medium border-r-2 border-primary' 
         : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
     }`;
   };
 
-  const isMainExpanded = mainItems.some((i) => isActive(i.id));
-  const isAnalyticsExpanded = analyticsItems.some((i) => isActive(i.id));
-  const isToolsExpanded = toolsItems.some((i) => isActive(i.id));
+  const isMainExpanded = mainItems.some((i) => isActive(i.url));
+  const isAnalyticsExpanded = analyticsItems.some((i) => isActive(i.url));
+  const isToolsExpanded = toolsItems.some((i) => isActive(i.url));
 
   const SidebarSection = ({ 
     items, 
@@ -153,10 +152,7 @@ export function AppSidebar({ activeSection, onSectionChange }: SidebarProps) {
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild className="h-auto p-0">
-                <div 
-                  className={getNavCls(item.id)}
-                  onClick={() => onSectionChange(item.id)}
-                >
+                <NavLink to={item.url} className={getNavCls(item.url)}>
                   <div className="flex items-center p-3 w-full">
                     <item.icon className="h-5 w-5 flex-shrink-0" />
                     {!collapsed && (
@@ -170,7 +166,7 @@ export function AppSidebar({ activeSection, onSectionChange }: SidebarProps) {
                       </div>
                     )}
                   </div>
-                </div>
+                </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
