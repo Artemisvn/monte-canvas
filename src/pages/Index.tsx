@@ -1,6 +1,9 @@
 import { BacktestingSimulator } from '@/components/BacktestingSimulator';
 import { MLModelSimulator } from '@/components/MLModelSimulator';
 import { RiskDashboard } from '@/components/RiskDashboard';
+import { LiveMarketDashboard } from '@/components/LiveMarketDashboard';
+import { AlertSystem } from '@/components/AlertSystem';
+import { ResearchNotebook } from '@/components/ResearchNotebook';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { Badge } from '@/components/ui/badge';
@@ -94,10 +97,13 @@ const Index = () => {
               </div>
 
               {/* Main Dashboard Content */}
-              <div className="space-y-6">
+              <div className="space-y-8">
+                <LiveMarketDashboard />
                 <BacktestingSimulator />
                 <MLModelSimulator />
                 <RiskDashboard />
+                <AlertSystem />
+                <ResearchNotebook />
               </div>
             </div>
           </main>

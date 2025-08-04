@@ -10,7 +10,8 @@ import {
   PieChart,
   Zap,
   Target,
-  BookOpen
+  BookOpen,
+  Bell
 } from 'lucide-react';
 
 import {
@@ -28,6 +29,12 @@ import {
 import { Badge } from '@/components/ui/badge';
 
 const mainItems = [
+  { 
+    title: 'Live Market', 
+    url: '/market', 
+    icon: Activity,
+    description: 'Real-time data & news'
+  },
   { 
     title: 'Backtesting Engine', 
     url: '/backtest', 
@@ -71,6 +78,18 @@ const analyticsItems = [
 
 const toolsItems = [
   { 
+    title: 'Alerts & Notifications', 
+    url: '/alerts', 
+    icon: Bell,
+    description: 'Price & volume alerts'
+  },
+  { 
+    title: 'Research Notebook', 
+    url: '/research', 
+    icon: BookOpen,
+    description: 'Ideas & documentation'
+  },
+  { 
     title: 'Monte Carlo', 
     url: '/monte-carlo', 
     icon: Activity,
@@ -82,12 +101,6 @@ const toolsItems = [
     icon: Target,
     description: 'Custom algorithm design'
   },
-  { 
-    title: 'Research Notes', 
-    url: '/research', 
-    icon: BookOpen,
-    description: 'Ideas & documentation'
-  },
 ];
 
 export function AppSidebar() {
@@ -97,6 +110,7 @@ export function AppSidebar() {
   const currentPath = location.pathname;
 
   const isActive = (path: string) => {
+    if (path === '/market' && currentPath === '/') return true;
     if (path === '/backtest' && currentPath === '/') return true;
     return currentPath === path;
   };
