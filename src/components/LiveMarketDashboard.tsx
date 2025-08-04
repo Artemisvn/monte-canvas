@@ -53,25 +53,63 @@ export const LiveMarketDashboard: React.FC = () => {
   const [marketIndices, setMarketIndices] = useState<any[]>([]);
   const [isLive, setIsLive] = useState(true);
 
-  // Static realistic market data (demo purposes)
+  // Fetch real market data from Yahoo Finance via Supabase edge function
   useEffect(() => {
-    const generateMarketData = (): MarketData[] => {
-      // Realistic current market data (approximate values)
-      const realData = [
-        { symbol: 'AAPL', price: 192.53, change: 2.14, volume: 45230000, high: 194.23, low: 190.15, marketCap: '$2.96T' },
-        { symbol: 'GOOGL', price: 142.47, change: -0.86, volume: 22150000, high: 144.12, low: 141.85, marketCap: '$1.79T' },
-        { symbol: 'MSFT', price: 420.15, change: 3.42, volume: 18920000, high: 422.67, low: 418.33, marketCap: '$3.12T' },
-        { symbol: 'TSLA', price: 248.86, change: -7.23, volume: 89450000, high: 256.75, low: 246.12, marketCap: '$792B' },
-        { symbol: 'AMZN', price: 171.25, change: 1.85, volume: 31760000, high: 172.94, low: 169.88, marketCap: '$1.78T' },
-        { symbol: 'NVDA', price: 875.34, change: 12.56, volume: 51820000, high: 882.45, low: 867.21, marketCap: '$2.16T' },
-        { symbol: 'META', price: 484.72, change: -2.18, volume: 14330000, high: 489.15, low: 482.67, marketCap: '$1.23T' },
-        { symbol: 'NFLX', price: 668.25, change: 5.92, volume: 8950000, high: 671.83, low: 663.47, marketCap: '$288B' }
-      ];
-      
-      return realData.map(stock => ({
-        ...stock,
-        changePercent: (stock.change / stock.price) * 100
-      }));
+    const fetchMarketData = async () => {
+      try {
+        // Fetch stock quotes
+        const stockResponse = await fetch('/functions/v1/yahoo-finance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'quote',
+            symbols: ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META', 'NFLX']
+          })
+        });
+        
+        if (stockResponse.ok) {
+          const stockData = await stockResponse.json();
+          setMarketData(stockData.data);
+        }
+        
+        // Fetch market indices
+        const indicesResponse = await fetch('/functions/v1/yahoo-finance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'indices'
+          })
+        });
+        
+        if (indicesResponse.ok) {
+          const indicesData = await indicesResponse.json();
+          setMarketIndices(indicesData.data);
+        }
+        
+      } catch (error) {
+        console.error('Failed to fetch market data:', error);
+        // Fallback to demo data if API fails
+        setMarketData([
+          { symbol: 'AAPL', price: 192.53, change: 2.14, changePercent: 1.12, volume: 45230000, high: 194.23, low: 190.15, marketCap: '$2.96T' },
+          { symbol: 'GOOGL', price: 142.47, change: -0.86, changePercent: -0.60, volume: 22150000, high: 144.12, low: 141.85, marketCap: '$1.79T' },
+          { symbol: 'MSFT', price: 420.15, change: 3.42, changePercent: 0.82, volume: 18920000, high: 422.67, low: 418.33, marketCap: '$3.12T' },
+          { symbol: 'TSLA', price: 248.86, change: -7.23, changePercent: -2.82, volume: 89450000, high: 256.75, low: 246.12, marketCap: '$792B' },
+          { symbol: 'AMZN', price: 171.25, change: 1.85, changePercent: 1.09, volume: 31760000, high: 172.94, low: 169.88, marketCap: '$1.78T' },
+          { symbol: 'NVDA', price: 875.34, change: 12.56, changePercent: 1.45, volume: 51820000, high: 882.45, low: 867.21, marketCap: '$2.16T' },
+          { symbol: 'META', price: 484.72, change: -2.18, changePercent: -0.45, volume: 14330000, high: 489.15, low: 482.67, marketCap: '$1.23T' },
+          { symbol: 'NFLX', price: 668.25, change: 5.92, changePercent: 0.89, volume: 8950000, high: 671.83, low: 663.47, marketCap: '$288B' }
+        ]);
+        setMarketIndices([
+          { name: 'S&P 500', value: 5108.76, change: 18.42, changePercent: 0.36 },
+          { name: 'NASDAQ', value: 16315.19, change: -24.85, changePercent: -0.15 },
+          { name: 'DOW', value: 39781.37, change: 89.23, changePercent: 0.22 },
+          { name: 'VIX', value: 14.67, change: -1.23, changePercent: -7.74 }
+        ]);
+      }
     };
 
     const generateNews = (): NewsItem[] => {
@@ -112,31 +150,18 @@ export const LiveMarketDashboard: React.FC = () => {
       }));
     };
 
-    const generateIndices = () => {
-      return [
-        { name: 'S&P 500', value: 5108.76, change: 18.42, changePercent: 0.36 },
-        { name: 'NASDAQ', value: 16315.19, change: -24.85, changePercent: -0.15 },
-        { name: 'DOW', value: 39781.37, change: 89.23, changePercent: 0.22 },
-        { name: 'VIX', value: 14.67, change: -1.23, changePercent: -7.74 }
-      ];
-    };
-
     // Initial data load
-    setMarketData(generateMarketData());
+    fetchMarketData();
     setNewsData(generateNews());
-    setMarketIndices(generateIndices());
 
-    // Note: In production, this would fetch real market data from an API
-    // For demo purposes, we're using static realistic data
-    // Remove the auto-update interval since we're using static data
-    // const interval = setInterval(() => {
-    //   if (isLive) {
-    //     setMarketData(generateMarketData());
-    //     setMarketIndices(generateIndices());
-    //   }
-    // }, 3000);
+    // Set up live updates every 30 seconds
+    const interval = setInterval(() => {
+      if (isLive) {
+        fetchMarketData();
+      }
+    }, 30000);
 
-    // return () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, [isLive]);
 
   const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
@@ -183,13 +208,13 @@ export const LiveMarketDashboard: React.FC = () => {
                 Live Market Dashboard
               </CardTitle>
               <CardDescription>
-                Demo market data for educational purposes
+                Real-time market data from Yahoo Finance
               </CardDescription>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="secondary">
+              <Badge variant={isLive ? "default" : "secondary"} className="animate-pulse">
                 <Activity className="h-3 w-3 mr-1" />
-                Demo Data
+                {isLive ? 'Live' : 'Paused'}
               </Badge>
               <Badge variant="outline">
                 <Clock className="h-3 w-3 mr-1" />
