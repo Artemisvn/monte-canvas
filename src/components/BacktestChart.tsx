@@ -137,172 +137,170 @@ export const BacktestChart: React.FC<BacktestChartProps> = ({ result, symbol }) 
         <CardContent>
           <div className="h-[500px]">
             <ResponsiveContainer width="100%" height="100%">
-              {chartType === 'portfolio' && (
-                <LineChart data={portfolioData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="date" 
-                    tickFormatter={formatDate}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <YAxis 
-                    tickFormatter={formatCurrency}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <Tooltip
-                    formatter={(value: number) => [formatCurrency(value), 'Portfolio Value']}
-                    labelFormatter={(date: string) => formatDate(date)}
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px'
-                    }}
-                  />
-                  
-                  <ReferenceLine 
-                    y={result.portfolioValues[0].value} 
-                    stroke="hsl(var(--muted-foreground))" 
-                    strokeDasharray="5 5"
-                    label="Initial Value"
-                  />
+              <>
+                {chartType === 'portfolio' && (
+                  <LineChart data={portfolioData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="date" 
+                      tickFormatter={formatDate}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <YAxis 
+                      tickFormatter={formatCurrency}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <Tooltip
+                      formatter={(value: number) => [formatCurrency(value), 'Portfolio Value']}
+                      labelFormatter={(date: string) => formatDate(date)}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                    />
+                    
+                    <ReferenceLine 
+                      y={result.portfolioValues[0].value} 
+                      stroke="hsl(var(--muted-foreground))" 
+                      strokeDasharray="5 5"
+                      label="Initial Value"
+                    />
 
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    dot={false}
-                    name="Portfolio Value"
-                  />
-                </LineChart>
-              )}
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      dot={false}
+                      name="Portfolio Value"
+                    />
+                  </LineChart>
+                )}
 
-              {chartType === 'signals' && (
-                <ScatterChart data={signalData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="index" 
-                    type="number"
-                    domain={['dataMin', 'dataMax']}
-                    stroke="hsl(var(--muted-foreground))"
-                    label={{ value: 'Time', position: 'insideBottom', offset: -5 }}
-                  />
-                  <YAxis 
-                    dataKey="price"
-                    tickFormatter={formatCurrency}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <Tooltip
-                    formatter={(value: number, name: string) => {
-                      if (name === 'price') return [formatCurrency(value), 'Price'];
-                      return [value, name];
-                    }}
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px'
-                    }}
-                  />
+                {chartType === 'signals' && (
+                  <ScatterChart data={signalData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="index" 
+                      type="number"
+                      domain={['dataMin', 'dataMax']}
+                      stroke="hsl(var(--muted-foreground))"
+                      label={{ value: 'Time', position: 'insideBottom', offset: -5 }}
+                    />
+                    <YAxis 
+                      dataKey="price"
+                      tickFormatter={formatCurrency}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <Tooltip
+                      formatter={(value: number, name: string) => {
+                        if (name === 'price') return [formatCurrency(value), 'Price'];
+                        return [value, name];
+                      }}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                    />
 
-                  {/* Price line */}
-                  <Scatter
-                    dataKey="price"
-                    fill="hsl(var(--muted-foreground))"
-                    fillOpacity={0.3}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={1}
-                  />
-                </ScatterChart>
-              )}
+                    <Scatter
+                      dataKey="price"
+                      fill="hsl(var(--muted-foreground))"
+                      fillOpacity={0.3}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={1}
+                    />
+                  </ScatterChart>
+                )}
 
-              {chartType === 'drawdown' && (
-                <AreaChart data={portfolioData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="date" 
-                    tickFormatter={formatDate}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <YAxis 
-                    tickFormatter={(value) => `${value.toFixed(1)}%`}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <Tooltip
-                    formatter={(value: number) => [`${value.toFixed(2)}%`, 'Drawdown']}
-                    labelFormatter={(date: string) => formatDate(date)}
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px'
-                    }}
-                  />
+                {chartType === 'drawdown' && (
+                  <AreaChart data={portfolioData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="date" 
+                      tickFormatter={formatDate}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <YAxis 
+                      tickFormatter={(value) => `${value.toFixed(1)}%`}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <Tooltip
+                      formatter={(value: number) => [`${value.toFixed(2)}%`, 'Drawdown']}
+                      labelFormatter={(date: string) => formatDate(date)}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                    />
 
-                  <Area
-                    type="monotone"
-                    dataKey="drawdown"
-                    stroke="hsl(var(--destructive))"
-                    fill="hsl(var(--destructive) / 0.2)"
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              )}
+                    <Area
+                      type="monotone"
+                      dataKey="drawdown"
+                      stroke="hsl(var(--destructive))"
+                      fill="hsl(var(--destructive) / 0.2)"
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                )}
 
-              {chartType === 'trades' && (
-                <ScatterChart data={signalData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="index" 
-                    type="number"
-                    domain={['dataMin', 'dataMax']}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <YAxis 
-                    dataKey="price"
-                    tickFormatter={formatCurrency}
-                    stroke="hsl(var(--muted-foreground))"
-                  />
-                  <Tooltip
-                    formatter={(value: number, name: string) => {
-                      if (name === 'price') return [formatCurrency(value), 'Price'];
-                      return [value, name];
-                    }}
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px'
-                    }}
-                  />
+                {chartType === 'trades' && (
+                  <ScatterChart data={signalData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="index" 
+                      type="number"
+                      domain={['dataMin', 'dataMax']}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <YAxis 
+                      dataKey="price"
+                      tickFormatter={formatCurrency}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <Tooltip
+                      formatter={(value: number, name: string) => {
+                        if (name === 'price') return [formatCurrency(value), 'Price'];
+                        return [value, name];
+                      }}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '6px'
+                      }}
+                    />
 
-                  {/* Price line */}
-                  <Scatter
-                    dataKey="price"
-                    fill="hsl(var(--muted-foreground))"
-                    fillOpacity={0.3}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={1}
-                  />
+                    <Scatter
+                      dataKey="price"
+                      fill="hsl(var(--muted-foreground))"
+                      fillOpacity={0.3}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={1}
+                    />
 
-                  {/* Buy trades */}
-                  <Scatter
-                    data={buyTrades}
-                    dataKey="price"
-                    fill="hsl(var(--success))"
-                    stroke="hsl(var(--success))"
-                    strokeWidth={2}
-                    name="Buy"
-                  />
+                    <Scatter
+                      data={buyTrades}
+                      dataKey="price"
+                      fill="hsl(var(--success))"
+                      stroke="hsl(var(--success))"
+                      strokeWidth={2}
+                      name="Buy"
+                    />
 
-                  {/* Sell trades */}
-                  <Scatter
-                    data={sellTrades}
-                    dataKey="price"
-                    fill="hsl(var(--destructive))"
-                    stroke="hsl(var(--destructive))"
-                    strokeWidth={2}
-                    name="Sell"
-                  />
-                </ScatterChart>
-              )}
+                    <Scatter
+                      data={sellTrades}
+                      dataKey="price"
+                      fill="hsl(var(--destructive))"
+                      stroke="hsl(var(--destructive))"
+                      strokeWidth={2}
+                      name="Sell"
+                    />
+                  </ScatterChart>
+                )}
+              </>
             </ResponsiveContainer>
           </div>
         </CardContent>
