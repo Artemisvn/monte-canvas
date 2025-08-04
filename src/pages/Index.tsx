@@ -1,7 +1,7 @@
-import { PortfolioSimulator } from '@/components/PortfolioSimulator';
+import { BacktestingSimulator } from '@/components/BacktestingSimulator';
 
 const Index = () => {
-  return <PortfolioSimulator />;
+  return <BacktestingSimulator />;
 };
 
 export default Index;
