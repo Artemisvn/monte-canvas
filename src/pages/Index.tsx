@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BacktestingSimulator } from '@/components/BacktestingSimulator';
 import { MLModelSimulator } from '@/components/MLModelSimulator';
 import { RiskDashboard } from '@/components/RiskDashboard';
@@ -11,10 +12,11 @@ import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Activity, Zap } from 'lucide-react';
 
 const Index = () => {
+  const [activeSection, setActiveSection] = useState('market');
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background to-muted/20">
-        <AppSidebar />
+        <AppSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
         
         <div className="flex-1 flex flex-col">
           {/* Header */}
@@ -99,13 +101,25 @@ const Index = () => {
 
               {/* Main Dashboard Content */}
               <div className="space-y-8">
-                <LiveMarketDashboard />
-                <OptionsTrading />
-                <BacktestingSimulator />
-                <MLModelSimulator />
-                <RiskDashboard />
-                <AlertSystem />
-                <ResearchNotebook />
+                {activeSection === 'market' && <LiveMarketDashboard />}
+                {activeSection === 'options' && <OptionsTrading />}
+                {activeSection === 'backtest' && <BacktestingSimulator />}
+                {activeSection === 'ml-models' && <MLModelSimulator />}
+                {activeSection === 'risk-management' && <RiskDashboard />}
+                {activeSection === 'alerts' && <AlertSystem />}
+                {activeSection === 'research' && <ResearchNotebook />}
+                
+                {/* Show all by default for demonstration */}
+                {activeSection === 'market' && (
+                  <div className="space-y-8">
+                    <OptionsTrading />
+                    <BacktestingSimulator />
+                    <MLModelSimulator />
+                    <RiskDashboard />
+                    <AlertSystem />
+                    <ResearchNotebook />
+                  </div>
+                )}
               </div>
             </div>
           </main>
