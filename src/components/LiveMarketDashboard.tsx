@@ -53,26 +53,25 @@ export const LiveMarketDashboard: React.FC = () => {
   const [marketIndices, setMarketIndices] = useState<any[]>([]);
   const [isLive, setIsLive] = useState(true);
 
-  // Simulate live market data
+  // Static realistic market data (demo purposes)
   useEffect(() => {
     const generateMarketData = (): MarketData[] => {
-      const symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META', 'NFLX'];
-      return symbols.map(symbol => {
-        const basePrice = Math.random() * 200 + 50;
-        const change = (Math.random() - 0.5) * 10;
-        const changePercent = (change / basePrice) * 100;
-        
-        return {
-          symbol,
-          price: basePrice,
-          change,
-          changePercent,
-          volume: Math.floor(Math.random() * 10000000) + 1000000,
-          high: basePrice + Math.random() * 5,
-          low: basePrice - Math.random() * 5,
-          marketCap: `$${(Math.random() * 2000 + 100).toFixed(0)}B`
-        };
-      });
+      // Realistic current market data (approximate values)
+      const realData = [
+        { symbol: 'AAPL', price: 192.53, change: 2.14, volume: 45230000, high: 194.23, low: 190.15, marketCap: '$2.96T' },
+        { symbol: 'GOOGL', price: 142.47, change: -0.86, volume: 22150000, high: 144.12, low: 141.85, marketCap: '$1.79T' },
+        { symbol: 'MSFT', price: 420.15, change: 3.42, volume: 18920000, high: 422.67, low: 418.33, marketCap: '$3.12T' },
+        { symbol: 'TSLA', price: 248.86, change: -7.23, volume: 89450000, high: 256.75, low: 246.12, marketCap: '$792B' },
+        { symbol: 'AMZN', price: 171.25, change: 1.85, volume: 31760000, high: 172.94, low: 169.88, marketCap: '$1.78T' },
+        { symbol: 'NVDA', price: 875.34, change: 12.56, volume: 51820000, high: 882.45, low: 867.21, marketCap: '$2.16T' },
+        { symbol: 'META', price: 484.72, change: -2.18, volume: 14330000, high: 489.15, low: 482.67, marketCap: '$1.23T' },
+        { symbol: 'NFLX', price: 668.25, change: 5.92, volume: 8950000, high: 671.83, low: 663.47, marketCap: '$288B' }
+      ];
+      
+      return realData.map(stock => ({
+        ...stock,
+        changePercent: (stock.change / stock.price) * 100
+      }));
     };
 
     const generateNews = (): NewsItem[] => {
@@ -115,10 +114,10 @@ export const LiveMarketDashboard: React.FC = () => {
 
     const generateIndices = () => {
       return [
-        { name: 'S&P 500', value: 4750.2, change: 23.4, changePercent: 0.49 },
-        { name: 'NASDAQ', value: 14832.1, change: -12.7, changePercent: -0.09 },
-        { name: 'DOW', value: 37402.8, change: 156.2, changePercent: 0.42 },
-        { name: 'VIX', value: 18.3, change: -0.8, changePercent: -4.18 }
+        { name: 'S&P 500', value: 5108.76, change: 18.42, changePercent: 0.36 },
+        { name: 'NASDAQ', value: 16315.19, change: -24.85, changePercent: -0.15 },
+        { name: 'DOW', value: 39781.37, change: 89.23, changePercent: 0.22 },
+        { name: 'VIX', value: 14.67, change: -1.23, changePercent: -7.74 }
       ];
     };
 
@@ -127,15 +126,17 @@ export const LiveMarketDashboard: React.FC = () => {
     setNewsData(generateNews());
     setMarketIndices(generateIndices());
 
-    // Simulate live updates
-    const interval = setInterval(() => {
-      if (isLive) {
-        setMarketData(generateMarketData());
-        setMarketIndices(generateIndices());
-      }
-    }, 3000);
+    // Note: In production, this would fetch real market data from an API
+    // For demo purposes, we're using static realistic data
+    // Remove the auto-update interval since we're using static data
+    // const interval = setInterval(() => {
+    //   if (isLive) {
+    //     setMarketData(generateMarketData());
+    //     setMarketIndices(generateIndices());
+    //   }
+    // }, 3000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [isLive]);
 
   const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
@@ -182,13 +183,13 @@ export const LiveMarketDashboard: React.FC = () => {
                 Live Market Dashboard
               </CardTitle>
               <CardDescription>
-                Real-time market data and financial news
+                Demo market data for educational purposes
               </CardDescription>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant={isLive ? "default" : "secondary"} className="animate-pulse">
+              <Badge variant="secondary">
                 <Activity className="h-3 w-3 mr-1" />
-                {isLive ? 'Live' : 'Paused'}
+                Demo Data
               </Badge>
               <Badge variant="outline">
                 <Clock className="h-3 w-3 mr-1" />
